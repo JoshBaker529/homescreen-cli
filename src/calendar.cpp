@@ -9,7 +9,7 @@
 #include <sys/ioctl.h> // Required for ioctl and winsize
 #include <unistd.h>    // Required for STDOUT_FILENO
 
-Calendar::Calendar() {}
+Calendar::Calendar() { update_date(); }
 
 Calendar::~Calendar() {}
 
@@ -26,7 +26,9 @@ void Calendar::print_month() {
     exit(1);
   }
 
-  short date = 1; // FIX: Update to correct starting date
+  update_date();
+  int start_date = date->tm_mday - date->tm_wday;
+  string month = get_month_string();
 
   // Working size, for easy division
   short working_width = (w.ws_col - 1) - ((w.ws_col - 1) % 7);
@@ -36,7 +38,7 @@ void Calendar::print_month() {
   short day_width = working_width / 7;
   short day_heigh = working_height / 4;
 
-  std::cout << "MONTH\nSomething?\n";
+  std::cout << date->tm_year << "\n" << month << "\n";
 
   for (int wid = 0; wid < working_width + 1; wid++) {
     std::cout << "#";
@@ -48,7 +50,7 @@ void Calendar::print_month() {
     std::cout << "#";
 
     for (int day = 0; day < 7; day++) {
-      std::cout << std::setw(2) << date++ << std::setw(1);
+      std::cout << std::setw(2) << start_date++ << std::setw(1);
       for (int i = 0; i < day_width - 3; i++) {
         std::cout << " ";
       }
@@ -70,5 +72,42 @@ void Calendar::print_month() {
       std::cout << "#";
     }
     std::cout << std::flush;
+  }
+}
+
+void Calendar::update_date() {
+  time_t now = time(0);
+  date = localtime(&now);
+  date->tm_year += 1900;
+}
+
+string Calendar::get_month_string() {
+  switch (date->tm_mon) {
+  case 0:
+    return "January";
+  case 1:
+    return "February";
+  case 2:
+    return "March";
+  case 3:
+    return "April";
+  case 4:
+    return "May";
+  case 5:
+    return "June";
+  case 6:
+    return "July";
+  case 7:
+    return "August";
+  case 8:
+    return "September";
+  case 9:
+    return "October";
+  case 10:
+    return "November";
+  case 11:
+    return "December";
+  default:
+    return "Error";
   }
 }
