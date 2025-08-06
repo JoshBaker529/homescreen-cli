@@ -11,13 +11,11 @@
 
 Calendar::Calendar() { update_date(); }
 
-Calendar::~Calendar() {}
+Calendar::~Calendar() { delete date; }
 
 void Calendar::print_month() {
 
   // TODO:
-  // Need to add in ability to print month and year at top.
-  //    Add padding
   // Still need to implement the todo items, important dates, etc.
   system("clear");
   struct winsize w;
@@ -50,8 +48,13 @@ void Calendar::print_month() {
     std::cout << "#";
 
     for (int day = 0; day < 7; day++) {
-      std::cout << std::setw(2) << start_date++ << std::setw(1);
-      for (int i = 0; i < day_width - 3; i++) {
+      if (start_date == date->tm_mday) {
+        std::cout << "\033[35m " << std::setw(2) << start_date++ << std::setw(1)
+                  << "\033[0m";
+      } else {
+        std::cout << " " << std::setw(2) << start_date++ << std::setw(1);
+      }
+      for (int i = 0; i < day_width - 4; i++) {
         std::cout << " ";
       }
       std::cout << "#";
