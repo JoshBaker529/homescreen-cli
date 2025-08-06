@@ -3,3 +3,6 @@
 
 # Don't include build folder
 build/
+
+# I don't fully know what these are
+*.DS_Store
