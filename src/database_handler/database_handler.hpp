@@ -5,16 +5,23 @@
 #define DATABASE_HANDLER_H
 
 #include <ctime>
-#include <sqlite3pp-master/headeronly_src/sqlite3ppext.h>
+#include <sqlite3pp-master/headeronly_src/sqlite3pp.h>
+#include <string>
 
-template <class T> class DatabaseHandler {
+static int days_in_month[] = {0,  31, 28, 31, 30, 31, 30,
+                              31, 31, 30, 31, 30, 31};
+
+class DatabaseHandler {
 public:
   DatabaseHandler();
   ~DatabaseHandler();
-  T *get_events_month(struct tm *start);
+  sqlite3pp::query get_events_month(struct tm *start);
 
 private:
   sqlite3pp::database db;
+  std::string date_to_string(struct tm *date);
+  struct tm get_start_of_week(struct tm *date);
+  struct tm add_days_to_date(struct tm *date, int days);
 };
 
 // TODO:
