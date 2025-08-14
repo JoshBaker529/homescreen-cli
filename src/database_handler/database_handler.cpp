@@ -16,8 +16,10 @@ DatabaseHandler::DatabaseHandler() {
              "date DATE,"
              "class TEXT,"
              "desc TEXT,"
+             "finished BOOL,"
              // Meta data used for daily info
-             "schedule BOOL"
+             "schedule BOOL,"
+             "important BOOL,"
              ")");
 }
 
