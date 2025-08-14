@@ -38,15 +38,26 @@ void Calendar::print_month() {
 
   std::cout << date->tm_year << "\n" << month << "\n";
 
-  for (int wid = 0; wid < working_width + 1; wid++) {
-    std::cout << "#";
+  // Top border
+  std::cout << Characters.TOP_LEFT;
+
+  for (int wid = 1; wid < working_width; wid++) {
+    if (wid % day_width == 0) {
+      std::cout << Characters.TOP_VERT;
+    } else {
+      std::cout << Characters.HORIZONTAL;
+    }
   }
 
+  std::cout << Characters.TOP_RIGHT;
+
+  // Innards
   std::cout << std::setfill('0');
   for (int week = 0; week < 4; week++) {
-    std::cout << "\n";
-    std::cout << "#";
+    // Left side
+    std::cout << "\n" << Characters.VERTICAL;
 
+    // First line of the box
     for (int day = 0; day < 7; day++) {
       if (start_date == date->tm_mday) {
         std::cout << "\033[35m " << std::setw(2) << start_date++ << std::setw(1)
@@ -57,25 +68,49 @@ void Calendar::print_month() {
       for (int i = 0; i < day_width - 4; i++) {
         std::cout << " ";
       }
-      std::cout << "#";
+      std::cout << Characters.VERTICAL;
     }
     std::cout << "\n";
+
+    // Rest of the lines of the box
     for (int j = 0; j < day_heigh - 2; j++) {
-      std::cout << "#";
+      std::cout << Characters.VERTICAL;
       for (int day = 0; day < 7; day++) {
-        // std::cout << std::setw(2) << date++ << std::setw(1);
         for (int i = 0; i < day_width - 1; i++) {
           std::cout << " ";
         }
-        std::cout << "#";
+        std::cout << Characters.VERTICAL;
       }
       std::cout << "\n";
     }
-    for (int wid = 0; wid < working_width + 1; wid++) {
-      std::cout << "#";
+
+    // If Last week, print bottom border
+    if (week == 3) {
+      std::cout << Characters.BOTTOM_LEFT;
+      for (int wid = 1; wid < working_width; wid++) {
+        if (wid % day_width == 0) {
+          std::cout << Characters.BOTTOM_VERT;
+        } else {
+          std::cout << Characters.HORIZONTAL;
+        }
+      }
+      std::cout << Characters.BOTTOM_RIGHT;
+    } else {
+      // Innard horizontal border
+      std::cout << Characters.LEFT_HORIZONTAL;
+      for (int wid = 1; wid < working_width; wid++) {
+        if (wid % day_width == 0) {
+          std::cout << Characters.CROSS;
+        } else {
+          std::cout << Characters.HORIZONTAL;
+        }
+      }
+      std::cout << Characters.RIGHT_HORIZONTAL;
     }
-    std::cout << std::flush;
   }
+
+  // Force print the buffer
+  std::cout << std::flush;
 }
 
 void Calendar::update_date() {
