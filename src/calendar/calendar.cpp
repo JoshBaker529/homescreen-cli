@@ -1,4 +1,5 @@
 #include "calendar.hpp"
+#include "../database_handler/database_handler.hpp"
 
 #include <ctime>
 #include <iomanip>
@@ -59,6 +60,10 @@ void Calendar::print_month() {
 
     // First line of the box
     for (int day = 0; day < 7; day++) {
+      if (start_date > days_in_month[date->tm_mon]) {
+        // days_in_month from database_handler.hpp
+        start_date = 1;
+      }
       if (start_date == date->tm_mday) {
         std::cout << "\033[35m " << std::setw(2) << start_date++ << std::setw(1)
                   << "\033[0m";
@@ -77,6 +82,7 @@ void Calendar::print_month() {
       std::cout << Characters.VERTICAL;
       for (int day = 0; day < 7; day++) {
         for (int i = 0; i < day_width - 1; i++) {
+          // NOTE: INSERT EVENTS HERE
           std::cout << " ";
         }
         std::cout << Characters.VERTICAL;
