@@ -7,6 +7,7 @@
 #include <ctime>
 #include <sqlite3pp-master/headeronly_src/sqlite3pp.h>
 #include <string>
+using std::string;
 
 static int days_in_month[] = {0,  31, 28, 31, 30, 31, 30,
                               31, 31, 30, 31, 30, 31};
@@ -15,7 +16,10 @@ class DatabaseHandler {
 public:
   DatabaseHandler();
   ~DatabaseHandler();
-  sqlite3pp::query get_events_month(struct tm *start);
+  void debug_print_db();
+  void add_event(string date, string class_id, string desc, string sched,
+                 string important);
+  std::string get_events_month_string(struct tm *start);
 
 private:
   sqlite3pp::database db;
@@ -25,12 +29,7 @@ private:
 };
 
 // TODO:
-// Main thought for updating cache:
-// Use websockets to communicate updates.
-// When a change is made, send a request to every other process
-//    to update their cache.
-// When recieving a request, re-process the query
-// .
-// WHICH APPARENTLY C++ DOESN'T HAVE WEBSOCKETS BUILT INTO IT!
-
+// Implement a way to add to the database
+//  -> Send update
+//  -> -> Also, need to add some defines for each port
 #endif // !DATABASE_HANDLER_H

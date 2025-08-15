@@ -4,6 +4,8 @@
 #include <ctime>
 #include <string>
 
+#include <iostream>
+
 // These are -1 to account for the first day.
 // ie Sunday is 1, Saturday is 6 days ahead of that
 #define DAYS_MONTH 27
@@ -11,21 +13,50 @@
 
 DatabaseHandler::DatabaseHandler() {
   db = sqlite3pp::database("Something.db");
-  db.execute("CREATE TABLE IF NOT EXISTS events ("
-             // Generic data used for everything
-             "date DATE,"
-             "class TEXT,"
-             "desc TEXT,"
-             "finished BOOL,"
-             // Meta data used for daily info
-             "schedule BOOL,"
-             "important BOOL,"
-             ")");
+  sqlite3pp::command cmd(db, "CREATE TABLE IF NOT EXISTS events ("
+                             // Generic data used for everything
+                             "date DATE,"
+                             "class TEXT,"
+                             "desc TEXT,"
+                             "finished BOOL,"
+                             // Meta data used for daily info
+                             "schedule BOOL,"
+                             "important BOOL"
+                             ")");
+  cmd.execute();
 }
 
 DatabaseHandler::~DatabaseHandler() { db.disconnect(); }
 
-sqlite3pp::query DatabaseHandler::get_events_month(struct tm *date) {
+void DatabaseHandler::debug_print_db() {
+  sqlite3pp::query qry(db, "SELECT * FROM events");
+
+  for (int i = 0; i < qry.column_count(); ++i) {
+    std::cout << qry.column_name(i) << "\t";
+  }
+
+  std::cout << "\n";
+
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    for (int j = 0; j < qry.column_count(); ++j) {
+      std::cout << (*i).get<char const *>(j) << "\t";
+    }
+    std::cout << std::endl;
+  }
+}
+
+void DatabaseHandler::add_event(string date, string class_id, string desc,
+                                string sched, string important) {
+
+  sqlite3pp::command cmd(
+      db, "INSERT INTO "
+          "events (date, class, desc, finished, schedule, important) "
+          "VALUES (?, ?, ?, ?, ?, ?)");
+  cmd.binder() << date << class_id << desc << "FALSE" << sched << important;
+  cmd.execute();
+}
+
+std::string DatabaseHandler::get_events_month_string(struct tm *date) {
   struct tm start = get_start_of_week(date);
   struct tm end = add_days_to_date(&start, DAYS_MONTH);
 
@@ -33,7 +64,7 @@ sqlite3pp::query DatabaseHandler::get_events_month(struct tm *date) {
                         date_to_string(&start) + "' AND '" +
                         date_to_string(&end) + "'";
 
-  return sqlite3pp::query(db, request.c_str());
+  return request;
 }
 
 std::string DatabaseHandler::date_to_string(struct tm *date) {
