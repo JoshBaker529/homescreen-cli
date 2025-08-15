@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 
+#include <sstream>
 #include <sys/ioctl.h> // Required for ioctl and winsize
 #include <unistd.h>    // Required for STDOUT_FILENO
 
@@ -26,7 +27,12 @@ void Calendar::print_month() {
   }
 
   update_date();
-  int start_date = date->tm_mday - date->tm_wday;
+
+  // Update to calendar's own get months member function
+  // To prevent reading database every time.
+  EVENT_MAP events = database.get_events_month(date);
+  struct tm current_date = *date;
+  current_date.tm_mday = date->tm_mday - date->tm_wday;
   string month = get_month_string();
 
   // Working size, for easy division
@@ -60,15 +66,19 @@ void Calendar::print_month() {
 
     // First line of the box
     for (int day = 0; day < 7; day++) {
-      if (start_date > days_in_month[date->tm_mon]) {
+      if (current_date.tm_mday > days_in_month[date->tm_mon]) {
         // days_in_month from database_handler.hpp
-        start_date = 1;
+        current_date.tm_mday = 1;
+        current_date.tm_mon += 1;
+        if (current_date.tm_mon > 12)
+          current_date.tm_mon = 1;
       }
-      if (start_date == date->tm_mday) {
-        std::cout << "\033[35m " << std::setw(2) << start_date++ << std::setw(1)
-                  << "\033[0m";
+      if (current_date.tm_mday == date->tm_mday) {
+        std::cout << "\033[35m " << std::setw(2) << current_date.tm_mday++
+                  << std::setw(1) << "\033[0m";
       } else {
-        std::cout << " " << std::setw(2) << start_date++ << std::setw(1);
+        std::cout << " " << std::setw(2) << current_date.tm_mday++
+                  << std::setw(1);
       }
       for (int i = 0; i < day_width - 4; i++) {
         std::cout << " ";
@@ -79,13 +89,30 @@ void Calendar::print_month() {
 
     // Rest of the lines of the box
     for (int j = 0; j < day_heigh - 2; j++) {
+      current_date = sub_days_to_date(&current_date, 7);
       std::cout << Characters.VERTICAL;
       for (int day = 0; day < 7; day++) {
+
+        string db_date = get_database_date(&current_date);
+        // std::cout << db_date;
+        string print = "                                             ";
+        if (events.count(db_date) > 0) {
+          // std::cout << "Somehting";
+          if (events[db_date].size() > j) {
+            print = events[db_date][j].class_id;
+            print.append(" ");
+            print.append(events[db_date][j].description);
+            while (print.length() < day_width) {
+              print.append(" ");
+            }
+          }
+        }
         for (int i = 0; i < day_width - 1; i++) {
           // NOTE: INSERT EVENTS HERE
-          std::cout << " ";
+          std::cout << print[i];
         }
         std::cout << Characters.VERTICAL;
+        current_date = add_days_to_date(&current_date, 1);
       }
       std::cout << "\n";
     }
@@ -155,4 +182,13 @@ string Calendar::get_month_string() {
   default:
     return "Error";
   }
+}
+
+string Calendar::get_database_date(struct tm *d) {
+  std::stringstream ss;
+  ss << std::setfill('0');
+  ss << d->tm_year << "-" << std::setw(2) << d->tm_mon << std::setw(1) << "-"
+     << std::setw(2) << d->tm_mday;
+
+  return ss.str();
 }
