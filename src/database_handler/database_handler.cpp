@@ -16,7 +16,7 @@
 #define DAYS_WEEK 6
 
 DatabaseHandler::DatabaseHandler() {
-  db = sqlite3pp::database("Something.db");
+  db = sqlite3pp::database("Homescreen.db");
   sqlite3pp::command cmd(db, "CREATE TABLE IF NOT EXISTS events ("
                              // Generic data used for everything
                              "date DATE,"

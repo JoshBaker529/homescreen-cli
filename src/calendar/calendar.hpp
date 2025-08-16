@@ -17,6 +17,8 @@ private:
   void update_date();
   string get_month_string();
   string get_database_date(struct tm *d);
+  bool update;
+  EVENT_MAP events;
 };
 
 #endif // !CALENDAR_HPP

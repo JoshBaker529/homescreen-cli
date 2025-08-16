@@ -12,7 +12,10 @@
 #include <sys/ioctl.h> // Required for ioctl and winsize
 #include <unistd.h>    // Required for STDOUT_FILENO
 
-Calendar::Calendar() { update_date(); }
+Calendar::Calendar() {
+  update_date();
+  update = true;
+}
 
 Calendar::~Calendar() { delete date; }
 
@@ -31,7 +34,11 @@ void Calendar::print_month() {
 
   // Update to calendar's own get months member function
   // To prevent reading database every time.
-  EVENT_MAP events = database.get_events_month(date);
+
+  if (update) {
+    events = database.get_events_month(date);
+    update = false;
+  }
   struct tm current_date = *date;
   current_date.tm_mday = date->tm_mday - date->tm_wday;
   string month = get_month_string();

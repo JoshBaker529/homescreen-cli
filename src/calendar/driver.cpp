@@ -14,11 +14,10 @@ int main() {
   Calendar cal;
   int i = 0;
   // temporarily commented
-  // while (i < 10) {
-  cal.print_month();
+  while (true) {
+    cal.print_month();
 
-  std::this_thread::sleep_for(std::chrono::seconds(5));
-  i++;
-  //}
+    std::this_thread::sleep_for(std::chrono::minutes(15));
+  }
   return 0;
 }

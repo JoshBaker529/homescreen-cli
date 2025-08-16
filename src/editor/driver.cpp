@@ -29,7 +29,7 @@ int main() {
       cin >> important;
 
       db.add_event(date, class_id, desc, sched, important);
-      db.debug_print_db();
+      // db.debug_print_db();
     }
   }
   return 0;
