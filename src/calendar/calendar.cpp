@@ -1,5 +1,6 @@
 #include "calendar.hpp"
 #include "../database_handler/database_handler.hpp"
+#include "../util/border_characters.hpp"
 
 #include <ctime>
 #include <iomanip>
