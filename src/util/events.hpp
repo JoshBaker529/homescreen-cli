@@ -1,3 +1,5 @@
+#ifndef EVENTS_HPP
+#define EVENTS_HPP
 
 #include <iostream>
 #include <string>
@@ -34,3 +36,4 @@ inline std::ostream &operator<<(std::ostream &os, const event &e) {
      << ", sched: " << e.sched << ", important: " << e.important << " }";
   return os;
 }
+#endif // !EVENTS_HPP

@@ -1,5 +1,6 @@
 
 #include "database_handler.hpp"
+#include "../util/functions.hpp"
 #include "sqlite3pp-master/headeronly_src/sqlite3pp.h"
 #include <ctime>
 #include <iomanip>

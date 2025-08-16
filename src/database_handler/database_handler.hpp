@@ -4,12 +4,10 @@
 #ifndef DATABASE_HANDLER_H
 #define DATABASE_HANDLER_H
 
-// #include "../util/definitions.hpp"
-#include "../util/functions.cpp"
+#include "../util/definitions.hpp"
 #include <ctime>
 #include <sqlite3pp-master/headeronly_src/sqlite3pp.h>
 #include <string>
-#include <vector>
 using std::string;
 
 class DatabaseHandler {

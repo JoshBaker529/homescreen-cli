@@ -1,3 +1,6 @@
+#ifndef DEFINITIONS_HPP
+#define DEFINITIONS_HPP
+
 #include "events.hpp"
 #include <map>
 #include <string>
@@ -8,3 +11,5 @@ typedef std::map<string, std::vector<event>> EVENT_MAP;
 
 static int days_in_month[] = {0,  31, 28, 31, 30, 31, 30,
                               31, 31, 30, 31, 30, 31};
+
+#endif // DEFINITIONS_HPP
