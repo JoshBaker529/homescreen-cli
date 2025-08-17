@@ -64,6 +64,9 @@ EVENT_MAP DatabaseHandler::get_events_month(struct tm *date) {
   struct tm start = get_start_of_week(date);
   struct tm end = add_days_to_date(&start, DAYS_MONTH);
 
+  return get_events_between(&start, &end);
+
+  /*
   std::string request = "SELECT * FROM events WHERE date BETWEEN '" +
                         date_to_string(&start) + "' AND '" +
                         date_to_string(&end) + "'";
@@ -78,13 +81,30 @@ EVENT_MAP DatabaseHandler::get_events_month(struct tm *date) {
                       string_to_bool((*i).get<string>(4)),
                       string_to_bool((*i).get<string>(5)));
     vec.push_back(item);
-    /*
-    for (int j = 0; j < qry.column_count(); ++j) {
-      std::cout << (*i).get<char const *>(j) << "\t";
-    }
+  }
 
-    std::cout << std::endl;
-    */
+  EVENT_MAP map = organize_events(vec);
+
+  return map;
+  */
+}
+
+EVENT_MAP DatabaseHandler::get_events_between(struct tm *start,
+                                              struct tm *end) {
+  std::string request = "SELECT * FROM events WHERE date BETWEEN '" +
+                        date_to_string(start) + "' AND '" +
+                        date_to_string(end) + "'";
+
+  sqlite3pp::query qry(db, request.c_str());
+
+  std::vector<event> vec;
+
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    struct event item((*i).get<string>(0), (*i).get<string>(1),
+                      (*i).get<string>(2), string_to_bool((*i).get<string>(3)),
+                      string_to_bool((*i).get<string>(4)),
+                      string_to_bool((*i).get<string>(5)));
+    vec.push_back(item);
   }
 
   EVENT_MAP map = organize_events(vec);
