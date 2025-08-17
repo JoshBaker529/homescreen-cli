@@ -31,6 +31,10 @@ int main() {
       db.add_event(date, class_id, desc, sched, important);
       // db.debug_print_db();
     }
+
+    if (action == "list") {
+      db.debug_print_db();
+    }
   }
   return 0;
 }
