@@ -8,7 +8,6 @@
 
 #include <cstdlib>
 
-#include <sstream>
 #include <sys/ioctl.h> // Required for ioctl and winsize
 #include <unistd.h>    // Required for STDOUT_FILENO
 
@@ -184,13 +183,4 @@ string Calendar::get_month_string() {
   default:
     return "Error";
   }
-}
-
-string Calendar::get_database_date(struct tm *d) {
-  std::stringstream ss;
-  ss << std::setfill('0');
-  ss << d->tm_year << "-" << std::setw(2) << d->tm_mon << std::setw(1) << "-"
-     << std::setw(2) << d->tm_mday;
-
-  return ss.str();
 }
