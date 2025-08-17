@@ -92,6 +92,12 @@ EVENT_MAP DatabaseHandler::get_events_month(struct tm *date) {
   return map;
 }
 
+string DatabaseHandler::get_latest_date() {
+  sqlite3pp::query qry(db, "SELECT MAX(date) FROM events");
+  sqlite3pp::query::iterator i = qry.begin();
+  return (*i).get<string>(0);
+}
+
 std::string DatabaseHandler::date_to_string(struct tm *date) {
 
   std::stringstream ss;
