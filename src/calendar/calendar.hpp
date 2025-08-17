@@ -14,7 +14,6 @@ public:
 private:
   DatabaseHandler database;
   struct tm *date;
-  void update_date();
   string get_month_string();
   string get_database_date(struct tm *d);
   bool update;

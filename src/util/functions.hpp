@@ -29,4 +29,12 @@ inline struct tm sub_days_to_date(struct tm *date, int days) {
   return temp;
 }
 
+inline struct tm *update_date() {
+  time_t now = time(0);
+  struct tm *date = localtime(&now);
+  date->tm_year += 1900;
+  date->tm_mon++;
+  return date;
+}
+
 #endif // !FUNCTIONS_CPP

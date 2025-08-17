@@ -13,7 +13,8 @@
 #include <unistd.h>    // Required for STDOUT_FILENO
 
 Calendar::Calendar() {
-  update_date();
+  // date = new tm;
+  date = update_date();
   update = true;
 }
 
@@ -30,7 +31,7 @@ void Calendar::print_month() {
     exit(1);
   }
 
-  update_date();
+  date = update_date();
 
   // Update to calendar's own get months member function
   // To prevent reading database every time.
@@ -152,13 +153,6 @@ void Calendar::print_month() {
 
   // Force print the buffer
   std::cout << std::flush;
-}
-
-void Calendar::update_date() {
-  time_t now = time(0);
-  date = localtime(&now);
-  date->tm_year += 1900;
-  date->tm_mon++;
 }
 
 string Calendar::get_month_string() {
