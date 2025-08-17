@@ -1,10 +1,15 @@
 
 
 #include "todo_list.hpp"
+#include <chrono>
+#include <thread>
 
 int main() {
   TodoList todo;
-  todo.print_list();
+  while (true) {
+    todo.print_list();
 
+    std::this_thread::sleep_for(std::chrono::minutes(15));
+  }
   return 0;
 }

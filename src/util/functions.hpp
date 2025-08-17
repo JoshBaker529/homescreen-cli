@@ -17,6 +17,9 @@ inline struct tm add_days_to_date(struct tm *date, int days) {
     temp.tm_mon++;
   }
 
+  // std::cout << "Updated date to " << temp.tm_year << "-" << temp.tm_mon <<
+  // "-"
+  //         << temp.tm_mday << "\n";
   return temp;
 }
 
@@ -42,8 +45,10 @@ inline struct tm *update_date() {
 inline bool dates_equal(struct tm *left, struct tm *right) {
   if (left->tm_year != right->tm_year)
     return false;
+
   if (left->tm_mon != right->tm_mon)
     return false;
+
   if (left->tm_mday != right->tm_mday)
     return false;
   return true;

@@ -22,9 +22,7 @@ DatabaseHandler::DatabaseHandler() {
                              "date DATE,"
                              "class TEXT,"
                              "desc TEXT,"
-                             "finished BOOL,"
                              // Meta data used for daily info
-                             "schedule BOOL,"
                              "important BOOL"
                              ")");
   cmd.execute();
@@ -50,13 +48,12 @@ void DatabaseHandler::debug_print_db() {
 }
 
 void DatabaseHandler::add_event(string date, string class_id, string desc,
-                                string sched, string important) {
+                                string important) {
 
-  sqlite3pp::command cmd(
-      db, "INSERT INTO "
-          "events (date, class, desc, finished, schedule, important) "
-          "VALUES (?, ?, ?, ?, ?, ?)");
-  cmd.binder() << date << class_id << desc << "FALSE" << sched << important;
+  sqlite3pp::command cmd(db, "INSERT INTO "
+                             "events (date, class, desc, important) "
+                             "VALUES (?, ?, ?, ?)");
+  cmd.binder() << date << class_id << desc << important;
   cmd.execute();
 }
 
@@ -65,28 +62,6 @@ EVENT_MAP DatabaseHandler::get_events_month(struct tm *date) {
   struct tm end = add_days_to_date(&start, DAYS_MONTH);
 
   return get_events_between(&start, &end);
-
-  /*
-  std::string request = "SELECT * FROM events WHERE date BETWEEN '" +
-                        date_to_string(&start) + "' AND '" +
-                        date_to_string(&end) + "'";
-
-  sqlite3pp::query qry(db, request.c_str());
-
-  std::vector<event> vec;
-
-  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
-    struct event item((*i).get<string>(0), (*i).get<string>(1),
-                      (*i).get<string>(2), string_to_bool((*i).get<string>(3)),
-                      string_to_bool((*i).get<string>(4)),
-                      string_to_bool((*i).get<string>(5)));
-    vec.push_back(item);
-  }
-
-  EVENT_MAP map = organize_events(vec);
-
-  return map;
-  */
 }
 
 EVENT_MAP DatabaseHandler::get_events_between(struct tm *start,
@@ -101,9 +76,7 @@ EVENT_MAP DatabaseHandler::get_events_between(struct tm *start,
 
   for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
     struct event item((*i).get<string>(0), (*i).get<string>(1),
-                      (*i).get<string>(2), string_to_bool((*i).get<string>(3)),
-                      string_to_bool((*i).get<string>(4)),
-                      string_to_bool((*i).get<string>(5)));
+                      (*i).get<string>(2), string_to_bool((*i).get<string>(3)));
     vec.push_back(item);
   }
 

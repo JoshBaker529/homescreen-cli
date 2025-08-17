@@ -15,8 +15,7 @@ public:
   DatabaseHandler();
   ~DatabaseHandler();
   void debug_print_db();
-  void add_event(string date, string class_id, string desc, string sched,
-                 string important);
+  void add_event(string date, string class_id, string desc, string important);
   EVENT_MAP get_events_month(struct tm *start);
   EVENT_MAP get_events_between(struct tm *start, struct tm *end);
   string get_latest_date();

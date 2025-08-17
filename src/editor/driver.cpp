@@ -7,7 +7,7 @@ using std::cout;
 
 int main() {
   DatabaseHandler db;
-  std::string action, date, class_id, desc, sched, important;
+  std::string action, date, class_id, desc, important;
 
   // Full disclosure, I will not keep this 100% like this.
   // I will add a way to add bulk items
@@ -23,12 +23,10 @@ int main() {
       std::getline(cin, class_id);
       cout << "\nEnter Description: ";
       std::getline(cin, desc);
-      cout << "\nIs this a schedule item? [TRUE/FALSE]: ";
-      cin >> sched;
       cout << "\nIs this an important item? [TRUE/FALSE]: ";
       cin >> important;
 
-      db.add_event(date, class_id, desc, sched, important);
+      db.add_event(date, class_id, desc, important);
       // db.debug_print_db();
     }
 
