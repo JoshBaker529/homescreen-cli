@@ -1,8 +1,10 @@
 
 
-#include <iostream>
+#include "todo_list.hpp"
 
 int main() {
-  std::cout << "Not implemented yet.";
+  TodoList todo;
+  todo.print_list();
+
   return 0;
 }
