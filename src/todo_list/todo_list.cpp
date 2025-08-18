@@ -42,17 +42,17 @@ void TodoList::print_list() {
     if (events.count(db_date) > 0) {
       std::cout << db_date << "\n";
       for (auto i = events[db_date].begin(); i != events[db_date].end(); i++) {
-        string print = "  ";
-        print.append(i->class_id);
+        string print = i->class_id;
         print.append(": ");
         print.append(i->description);
-        while (print.length() < w.ws_col) {
+        while (print.length() < w.ws_col - 3) {
           print.append(" ");
         }
-        for (int i = 0; i < w.ws_col; i++) {
+        std::cout << "  " << db.get_color(i->class_id);
+        for (int i = 0; i < w.ws_col - 3; i++) {
           std::cout << print[i];
         }
-        std::cout << "\n";
+        std::cout << color_reset << "\n";
       }
     }
   }
