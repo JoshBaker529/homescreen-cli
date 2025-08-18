@@ -108,8 +108,10 @@ void Calendar::print_month() {
           // std::cout << "Somehting";
           if (events[db_date].size() > j) {
             print = events[db_date][j].class_id;
+            std::cout << database.get_color(print);
             print.append(" ");
             print.append(events[db_date][j].description);
+
             while (print.length() < day_width) {
               print.append(" ");
             }
@@ -119,6 +121,7 @@ void Calendar::print_month() {
           // NOTE: INSERT EVENTS HERE
           std::cout << print[i];
         }
+        std::cout << color_reset;
         std::cout << Characters.VERTICAL;
         current_date = add_days_to_date(&current_date, 1);
       }
