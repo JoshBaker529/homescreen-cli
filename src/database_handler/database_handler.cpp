@@ -24,14 +24,23 @@ DatabaseHandler::DatabaseHandler() {
                              "desc TEXT,"
                              // Meta data used for daily info
                              "important BOOL"
-                             ")");
-  cmd.execute();
+                             ");"
+                             // Colors table
+                             "CREATE TABLE IF NOT EXISTS colors ("
+                             "tag TEXT,"
+                             "foreground TEXT,"
+                             "background TEXT"
+                             ")"
+
+  );
+  cmd.execute_all();
 }
 
 DatabaseHandler::~DatabaseHandler() { db.disconnect(); }
 
-void DatabaseHandler::debug_print_db() {
-  sqlite3pp::query qry(db, "SELECT * FROM events");
+void DatabaseHandler::debug_print_db(string table) {
+  string request = "SELECT * FROM " + table;
+  sqlite3pp::query qry(db, request.c_str());
 
   for (int i = 0; i < qry.column_count(); ++i) {
     std::cout << qry.column_name(i) << "\t";
@@ -43,6 +52,18 @@ void DatabaseHandler::debug_print_db() {
     for (int j = 0; j < qry.column_count(); ++j) {
       std::cout << (*i).get<char const *>(j) << "\t";
     }
+    std::cout << std::endl;
+  }
+}
+
+void DatabaseHandler::debug_colors_test() {
+  string request = "SELECT * FROM colors";
+  sqlite3pp::query qry(db, request.c_str());
+
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    string cl = (*i).get<string>(0);
+    string color = get_color(cl);
+    std::cout << color << cl << color_reset;
     std::cout << std::endl;
   }
 }
@@ -89,6 +110,28 @@ string DatabaseHandler::get_latest_date() {
   sqlite3pp::query qry(db, "SELECT MAX(date) FROM events");
   sqlite3pp::query::iterator i = qry.begin();
   return (*i).get<string>(0);
+}
+
+void DatabaseHandler::set_color(string class_id, string foreground,
+                                string background) {
+  sqlite3pp::command cmd(
+      db, "INSERT INTO colors (tag, foreground, background) VALUES (?, ?, ?)");
+  cmd.binder() << class_id << foreground << background;
+  cmd.execute();
+}
+
+string DatabaseHandler::get_color(string class_id) {
+  string request = "SELECT * FROM colors WHERE tag = '" + class_id + "'";
+  sqlite3pp::query qry(db, request.c_str());
+
+  // Only should have a single entry
+  sqlite3pp::query::iterator i = qry.begin();
+  string fore = (*i).get<string>(1);
+  string back = (*i).get<string>(2);
+
+  string ret =
+      "\033[" + foreground_color[fore] + ";" + background_color[back] + "m";
+  return ret;
 }
 
 std::string DatabaseHandler::date_to_string(struct tm *date) {

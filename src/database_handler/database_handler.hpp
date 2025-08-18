@@ -14,11 +14,14 @@ class DatabaseHandler {
 public:
   DatabaseHandler();
   ~DatabaseHandler();
-  void debug_print_db();
+  void debug_print_db(string table);
+  void debug_colors_test();
   void add_event(string date, string class_id, string desc, string important);
   EVENT_MAP get_events_month(struct tm *start);
   EVENT_MAP get_events_between(struct tm *start, struct tm *end);
   string get_latest_date();
+  void set_color(string class_id, string foreground, string background);
+  string get_color(string class_id);
 
 private:
   sqlite3pp::database db;
