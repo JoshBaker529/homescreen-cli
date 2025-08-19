@@ -1,6 +1,7 @@
 
 #include "database_handler.hpp"
 #include "../util/functions.hpp"
+// #include "../util/sched.hpp"
 #include "sqlite3pp-master/headeronly_src/sqlite3pp.h"
 #include <ctime>
 #include <iomanip>
@@ -22,7 +23,6 @@ DatabaseHandler::DatabaseHandler() {
                              "date DATE,"
                              "class TEXT,"
                              "desc TEXT,"
-                             // Meta data used for daily info
                              "important BOOL"
                              ");"
                              // Colors table
@@ -30,6 +30,14 @@ DatabaseHandler::DatabaseHandler() {
                              "tag TEXT,"
                              "foreground TEXT,"
                              "background TEXT"
+                             ");"
+                             // Weekly Schedule table
+                             "CREATE TABLE IF NOT EXISTS sched ("
+                             "day INTEGER,"
+                             "class TEXT,"
+                             "location TEXT,"
+                             "start TEXT,"
+                             "end TEXT"
                              ")"
 
   );
@@ -132,6 +140,31 @@ string DatabaseHandler::get_color(string class_id) {
   string ret =
       "\033[" + foreground_color[fore] + ";" + background_color[back] + "m";
   return ret;
+}
+
+std::vector<sched> DatabaseHandler::get_day_sched(int day) {
+  std::string request = "SELECT * FROM sched WHERE day = ";
+  request.append(std::to_string(day));
+  sqlite3pp::query qry(db, request.c_str());
+  std::vector<sched> vec;
+
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    struct sched item((*i).get<int>(0), (*i).get<string>(1),
+                      (*i).get<string>(2), (*i).get<string>(3),
+                      (*i).get<string>(4));
+    vec.push_back(item);
+  }
+
+  return vec;
+}
+
+void DatabaseHandler::add_sched_item(int day, string class_id, string location,
+                                     string start, string end) {
+
+  sqlite3pp::command cmd(db, "INSERT INTO sched (day, class, location, start, "
+                             "end) VALUES (?, ?, ?, ?, ?)");
+  cmd.binder() << day << class_id << location << start << end;
+  cmd.execute();
 }
 
 std::string DatabaseHandler::date_to_string(struct tm *date) {

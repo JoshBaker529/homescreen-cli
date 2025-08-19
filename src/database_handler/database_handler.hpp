@@ -5,9 +5,11 @@
 #define DATABASE_HANDLER_H
 
 #include "../util/definitions.hpp"
+#include "../util/sched.hpp"
 #include <ctime>
 #include <sqlite3pp-master/headeronly_src/sqlite3pp.h>
 #include <string>
+#include <vector>
 using std::string;
 
 class DatabaseHandler {
@@ -22,6 +24,9 @@ public:
   string get_latest_date();
   void set_color(string class_id, string foreground, string background);
   string get_color(string class_id);
+  std::vector<sched> get_day_sched(int day);
+  void add_sched_item(int day, string class_id, string location, string start,
+                      string end);
 
 private:
   sqlite3pp::database db;
