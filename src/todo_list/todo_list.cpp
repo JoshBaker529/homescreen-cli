@@ -25,6 +25,13 @@ void TodoList::print_list() {
   char dummy;
   ss >> year >> dummy >> month >> dummy >> day;
 
+  string first_line = "Important Dates";
+  int indent = w.ws_col - first_line.length();
+  indent /= 2;
+  for (; indent > 0; indent--)
+    std::cout << " ";
+  std::cout << set_underline << first_line << color_reset << "\n";
+
   date = update_date();
   struct tm start = *date;
   struct tm end = start;
@@ -37,10 +44,11 @@ void TodoList::print_list() {
   end = add_days_to_date(&end, 1);
   events = db.get_events_between(&start, &end);
 
-  for (; !dates_equal(&start, &end); start = add_days_to_date(&start, 1)) {
+  for (int rows = 1; !dates_equal(&start, &end) && rows < w.ws_row;
+       start = add_days_to_date(&start, 1), rows++) {
     string db_date = get_database_date(&start);
     if (events.count(db_date) > 0) {
-      std::cout << db_date << "\n";
+      std::cout << set_bold << " " << db_date << color_reset << "\n";
       for (auto i = events[db_date].begin(); i != events[db_date].end(); i++) {
         string print = i->class_id;
         print.append(": ");
