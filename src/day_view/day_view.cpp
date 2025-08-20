@@ -173,13 +173,21 @@ string DayView::make_right_side(int &size, int &rows) {
       ss << " ";
     }
 
-    ss << Characters.VERTICAL << i->class_id;
+    ss << Characters.VERTICAL;
+    if (i->class_id.length() > box_width)
+      ss << i->class_id.substr(0, box_width);
+    else
+      ss << i->class_id;
     buffer = box_width - i->class_id.length();
     for (; buffer > 0; buffer--) {
       ss << " ";
     }
 
-    ss << Characters.VERTICAL << i->location;
+    ss << Characters.VERTICAL;
+    if (i->location.length() > box_width)
+      ss << i->location.substr(0, box_width);
+    else
+      ss << i->location;
     buffer = box_width - i->location.length();
     for (; buffer > 0; buffer--) {
       ss << " ";
