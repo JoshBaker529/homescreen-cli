@@ -47,7 +47,8 @@ void DayView::print_view() {
   }
 
   // Date
-  std::cout << Characters.TOP_RIGHT << "\n" << Characters.VERTICAL << " ";
+  std::cout << Characters.TOP_RIGHT << "\n"
+            << Characters.VERTICAL << " " << set_bold;
   string d = get_day_string(date) + ", " + get_month_string(date) + " " +
              std::to_string(date->tm_mday) + get_date_ending(date) + " " +
              std::to_string(date->tm_year);
@@ -59,7 +60,8 @@ void DayView::print_view() {
     else
       std::cout << d[j];
   }
-  std::cout << Characters.VERTICAL << "\n" << Characters.LEFT_HORIZONTAL;
+  std::cout << color_reset << Characters.VERTICAL << "\n"
+            << Characters.LEFT_HORIZONTAL;
   // border below date
   // minus 2 for left border
   for (int i = 0; i < (w.ws_col - right_col) - 1; i++) {
