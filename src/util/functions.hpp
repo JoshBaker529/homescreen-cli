@@ -94,4 +94,46 @@ inline string get_month_string(struct tm *date) {
   }
 }
 
+inline string get_day_string(struct tm *date) {
+  switch (date->tm_wday) {
+  case 0:
+    return "Sunday";
+  case 1:
+    return "Monday";
+  case 2:
+    return "Tuesday";
+  case 3:
+    return "Wednesday";
+  case 4:
+    return "Thursday";
+  case 5:
+    return "Friday";
+  case 6:
+    return "Saturday";
+  default:
+    return "Error";
+  }
+}
+
+inline string get_date_ending(struct tm *date) {
+  switch (date->tm_mday % 10) {
+  case 0:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+  case 9:
+    return "th";
+  case 1:
+    return "st";
+  case 2:
+    return "nd";
+  case 3:
+    return "rd";
+  default:
+    return "";
+  }
+}
+
 #endif // !FUNCTIONS_CPP
