@@ -136,9 +136,10 @@ string DatabaseHandler::get_color(string class_id) {
   sqlite3pp::query::iterator i = qry.begin();
   string fore = (*i).get<string>(1);
   string back = (*i).get<string>(2);
+  string modifier = "";
 
-  string ret =
-      "\033[" + foreground_color[fore] + ";" + background_color[back] + "m";
+  string ret = "\033[" + foreground_color[fore] + ";" + background_color[back] +
+               modifier + "m";
   return ret;
 }
 

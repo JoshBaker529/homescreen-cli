@@ -18,7 +18,7 @@ static std::map<string, string> foreground_color{
     {"magenta", "35"},      {"cyan", "36"},       {"light gray", "37"},
     {"dark gray", "90"},    {"light red", "91"},  {"light green", "92"},
     {"light yellow", "93"}, {"light blue", "94"}, {"light magenta", "95"},
-    {"light cyan", "96"},   {"white", "97"}};
+    {"light cyan", "96"},   {"white", "97"},      {"bold", "1"}};
 
 static std::map<string, string> background_color{
     {"default", "49"},       {"black", "40"},       {"red", "41"},
@@ -28,5 +28,9 @@ static std::map<string, string> background_color{
     {"light yellow", "103"}, {"light blue", "104"}, {"light magenta", "105"},
     {"light cyan", "106"},   {"white", "107"}};
 
-static string color_reset = "\033[39;49m";
+static string color_reset = "\033[39;49;0m";
+
+static string set_bold = "\033[1m";
+static string clear_bold = "\033[21m";
+
 #endif // DEFINITIONS_HPP
