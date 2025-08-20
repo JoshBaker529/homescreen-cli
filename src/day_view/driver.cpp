@@ -7,7 +7,7 @@ int main() {
   DayView day;
   while (true) {
     day.print_view();
-    std::this_thread::sleep_for(std::chrono::minutes(15));
+    std::this_thread::sleep_for(std::chrono::minutes(1));
   }
   return 0;
 }
