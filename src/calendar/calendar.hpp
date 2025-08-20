@@ -14,7 +14,6 @@ public:
 private:
   DatabaseHandler database;
   struct tm *date;
-  string get_month_string();
 
   bool update;
   EVENT_MAP events;
