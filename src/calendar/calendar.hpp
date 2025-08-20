@@ -15,7 +15,6 @@ private:
   DatabaseHandler database;
   struct tm *date;
 
-  bool update;
   EVENT_MAP events;
 };
 
