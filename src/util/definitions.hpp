@@ -32,5 +32,6 @@ static string color_reset = "\033[39;49;0m";
 
 static string set_bold = "\033[1m";
 static string clear_bold = "\033[21m";
-
+static string set_underline = "\033[4m";
+static string clear_underline = "\033[24m";
 #endif // DEFINITIONS_HPP
