@@ -10,5 +10,5 @@ public:
 private:
   DatabaseHandler database;
   struct tm *date;
-  string make_right_side(int &size, int day);
+  string make_right_side(int &size, int &rows, int day);
 };
