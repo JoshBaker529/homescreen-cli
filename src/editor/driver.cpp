@@ -166,12 +166,6 @@ int main() {
         cout << "\nEnter end time in HH:MMXM format: ";
         std::getline(cin, end, '\n');
 
-        std::cout << "\nDebug: " << day << '\n'
-                  << class_id << '\n'
-                  << location << '\n'
-                  << start << '\n'
-                  << end << std::endl;
-
         db.add_sched_item(day, class_id, location, start, end);
         break;
 
@@ -191,6 +185,17 @@ int main() {
       }
       break;
     case DELETE:
+      switch (table) {
+      case TABLE_EVENTS:
+        db.delete_event();
+        break;
+      case TABLE_COLORS:
+        db.delete_color();
+        break;
+      case TABLE_SCHEDULE:
+        db.delete_sched();
+        break;
+      }
       break;
     case HELP:
       switch (table) {
