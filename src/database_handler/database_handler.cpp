@@ -328,7 +328,7 @@ void DatabaseHandler::edit_sched() {
     break;
   case 1:
     column = "day";
-    old = s.day;
+    old = std::to_string(s.day);
     break;
   case 2:
     column = "class";
