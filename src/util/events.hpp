@@ -23,6 +23,7 @@ struct event {
 
   event(string d, string c, string desc, bool i)
       : date(d), class_id(c), description(desc), important(i) {}
+  event() {}
 
   friend std::ostream &operator<<(std::ostream &os, const event &e);
 };
