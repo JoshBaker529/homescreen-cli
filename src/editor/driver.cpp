@@ -227,7 +227,7 @@ int main() {
       //
 
     std::cout << "\n\nDone, resetting..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(15));
+    std::this_thread::sleep_for(std::chrono::seconds(8));
   }
 
   // NOTE: Maybe save '?' as an input to list all possible options?

@@ -17,7 +17,7 @@ int main() {
   while (true) {
     cal.print_month();
 
-    std::this_thread::sleep_for(std::chrono::minutes(15));
+    std::this_thread::sleep_for(std::chrono::minutes(1));
   }
   return 0;
 }
