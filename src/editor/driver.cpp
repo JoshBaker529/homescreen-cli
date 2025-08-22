@@ -164,7 +164,13 @@ int main() {
         cout << "\nEnter start time in HH:MMXM format: ";
         std::getline(cin, start, '\n');
         cout << "\nEnter end time in HH:MMXM format: ";
-        std::getline(cin, important, '\n');
+        std::getline(cin, end, '\n');
+
+        std::cout << "\nDebug: " << day << '\n'
+                  << class_id << '\n'
+                  << location << '\n'
+                  << start << '\n'
+                  << end << std::endl;
 
         db.add_sched_item(day, class_id, location, start, end);
         break;
