@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <sys/ioctl.h> // Required for ioctl and winsize
@@ -167,27 +168,29 @@ string DayView::make_right_side(int &size, int &rows) {
       time = i->start;
     }
 
-    ss << time;
+    ss << database.get_color(i->class_id) << time << color_reset;
     int buffer = box_width - time.length();
     for (; buffer > 0; buffer--) {
       ss << " ";
     }
 
-    ss << Characters.VERTICAL;
+    ss << Characters.VERTICAL << database.get_color(i->class_id);
     if (i->class_id.length() > box_width)
       ss << i->class_id.substr(0, box_width);
     else
       ss << i->class_id;
+    ss << color_reset;
     buffer = box_width - i->class_id.length();
     for (; buffer > 0; buffer--) {
       ss << " ";
     }
 
-    ss << Characters.VERTICAL;
+    ss << Characters.VERTICAL << database.get_color(i->class_id);
     if (i->location.length() > box_width)
       ss << i->location.substr(0, box_width);
     else
       ss << i->location;
+    ss << color_reset;
     buffer = box_width - i->location.length();
     for (; buffer > 0; buffer--) {
       ss << " ";
