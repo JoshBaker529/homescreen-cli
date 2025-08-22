@@ -11,11 +11,11 @@ struct sched {
   std::string end;
 
   bool operator<(const sched &rhs) const {
-    int leftHour = std::stoi(start.substr(0, 2));
+    int leftHour = std::stoi(start.substr(0, 2)) % 12;
     int leftMinute = std::stoi(start.substr(3, 2));
     int leftAmPm = start.substr(5, 2) == "AM" ? 0 : 1;
 
-    int rightHour = std::stoi(rhs.start.substr(0, 2));
+    int rightHour = std::stoi(rhs.start.substr(0, 2)) % 12;
     int rightMinute = std::stoi(rhs.start.substr(3, 2));
     int rightAmPm = rhs.start.substr(5, 2) == "AM" ? 0 : 1;
 
