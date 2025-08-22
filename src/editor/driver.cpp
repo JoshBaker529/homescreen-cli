@@ -21,7 +21,8 @@ int main() {
   DatabaseHandler db;
   int action, table, day;
   std::string file_path, date, class_id, desc, important, fore, back, location,
-      start, end;
+      temp, start, end;
+  char dummy; // for getting rid of a char at specific locations
   std::ifstream InFile;
 
   while (true) {
@@ -45,7 +46,8 @@ int main() {
 
     switch (action) {
     case READ_FILE: // Action
-      cout << "\nFile should be tab separated"
+      cout << "\nElements should be tab separated, with newlines between each "
+              "item."
               "\nInput file path: ";
       getline(cin, file_path, '\n');
       InFile.open(file_path);
@@ -56,26 +58,36 @@ int main() {
       switch (table) {
       case TABLE_EVENTS:
         while (!InFile.eof()) {
-          InFile >> date >> class_id;
+          std::getline(InFile, date, '\t');
+          std::getline(InFile, class_id, '\t');
           std::getline(InFile, desc, '\t');
-          InFile >> important;
-          db.add_event(date, class_id, desc, important);
+          std::getline(InFile, important, '\n');
+          if (!InFile.eof())
+            db.add_event(date, class_id, desc, important);
         }
         break;
 
       case TABLE_COLORS:
         while (!InFile.eof()) {
-          InFile >> class_id >> fore >> back;
-          db.set_color(class_id, fore, back);
+          // InFile >> class_id >> fore >> back;
+          std::getline(InFile, class_id, '\t');
+          std::getline(InFile, fore, '\t');
+          std::getline(InFile, back, '\n');
+          if (!InFile.eof())
+            db.set_color(class_id, fore, back);
         }
         break;
 
       case TABLE_SCHEDULE:
         while (!InFile.eof()) {
-          InFile >> day >> class_id;
-          std::getline(cin, location, '\t');
-          InFile >> start >> end;
-          db.add_sched_item(day, class_id, location, start, end);
+          InFile >> day;
+          InFile.ignore(INT_MAX, '\t');
+          std::getline(InFile, class_id, '\t');
+          std::getline(InFile, location, '\t');
+          std::getline(InFile, start, '\t');
+          std::getline(InFile, end, '\n');
+          if (!InFile.eof())
+            db.add_sched_item(day, class_id, location, start, end);
         }
         break;
 
@@ -93,7 +105,6 @@ int main() {
         std::getline(cin, desc, '\n');
         cout << "\nIs this important? [TRUE/FALSE]: ";
         std::getline(cin, important, '\n');
-
         db.add_event(date, class_id, desc, important);
         break;
 
@@ -161,6 +172,16 @@ int main() {
     case DELETE:
       break;
     case HELP:
+      switch (table) {
+      case TABLE_EVENTS:
+        db.debug_print_db("events");
+        break;
+      case TABLE_COLORS:
+        db.debug_colors_test();
+        break;
+      case TABLE_SCHEDULE:
+        db.debug_print_db("sched");
+      }
       break;
     } // switch action
   }
