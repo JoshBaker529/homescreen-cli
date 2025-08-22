@@ -28,6 +28,7 @@ public:
   void add_sched_item(int day, string class_id, string location, string start,
                       string end);
   void edit_event();
+  void edit_color();
 
 private:
   sqlite3pp::database db;

@@ -1,9 +1,11 @@
 
 #include "../database_handler/database_handler.hpp"
+#include <chrono>
 #include <climits>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 using std::cin;
 using std::cout;
 
@@ -175,6 +177,7 @@ int main() {
         db.edit_event();
         break;
       case TABLE_COLORS:
+        db.edit_color();
         break;
       case TABLE_SCHEDULE:
         break;

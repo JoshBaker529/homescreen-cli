@@ -3,7 +3,6 @@
 #include "../util/functions.hpp"
 // #include "../util/sched.hpp"
 #include "sqlite3pp-master/headeronly_src/sqlite3pp.h"
-#include <climits>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -28,7 +27,7 @@ DatabaseHandler::DatabaseHandler() {
                              ");"
                              // Colors table
                              "CREATE TABLE IF NOT EXISTS colors ("
-                             "tag TEXT,"
+                             "tag TEXT PRIMARY KEY,"
                              "foreground TEXT,"
                              "background TEXT"
                              ");"
@@ -123,8 +122,8 @@ string DatabaseHandler::get_latest_date() {
 
 void DatabaseHandler::set_color(string class_id, string foreground,
                                 string background) {
-  sqlite3pp::command cmd(
-      db, "INSERT INTO colors (tag, foreground, background) VALUES (?, ?, ?)");
+  sqlite3pp::command cmd(db, "INSERT OR REPLACE INTO colors (tag, foreground, "
+                             "background) VALUES (?, ?, ?)");
   cmd.binder() << class_id << foreground << background;
   cmd.execute();
 }
@@ -257,6 +256,26 @@ void DatabaseHandler::edit_event() {
 
   cmd.execute();
 }
+
+void DatabaseHandler::edit_color() {
+  std::cout << "Starting search for class\nEnter class you wish to modify: ";
+  string class_id, request;
+  std::getline(std::cin, class_id, '\n');
+  // std::cin.ignore(1);
+  //  request = "SELECT * FROM colors WHERE class = '" + class_id + "'";
+
+  // sqlite3pp::query qry(db, request.c_str());
+
+  std::cout << "Foreground color: ";
+  string fore, back;
+  std::getline(std::cin, fore, '\n');
+  // std::cin.ignore(1);
+  std::cout << "Background color: ";
+  std::getline(std::cin, back, '\n');
+  // std::cin.ignore(1);
+  set_color(class_id, fore, back);
+}
+
 std::string DatabaseHandler::date_to_string(struct tm *date) {
 
   std::stringstream ss;
