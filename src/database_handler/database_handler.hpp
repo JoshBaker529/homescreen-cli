@@ -27,6 +27,7 @@ public:
   std::vector<sched> get_day_sched(int day);
   void add_sched_item(int day, string class_id, string location, string start,
                       string end);
+  void edit_event();
 
 private:
   sqlite3pp::database db;

@@ -3,6 +3,7 @@
 #include "../util/functions.hpp"
 // #include "../util/sched.hpp"
 #include "sqlite3pp-master/headeronly_src/sqlite3pp.h"
+#include <climits>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -168,6 +169,94 @@ void DatabaseHandler::add_sched_item(int day, string class_id, string location,
   cmd.execute();
 }
 
+void DatabaseHandler::edit_event() {
+  std::cout
+      << "Starting search for event\nEnter date of item you wish to modify: ";
+  string date, request;
+  std::getline(std::cin, date, '\n');
+  request = "SELECT * FROM events WHERE date = '" + date + "'";
+
+  sqlite3pp::query qry(db, request.c_str());
+
+  std::cout << "Found:\n";
+  int pos = 1, choice;
+  std::vector<event> evec;
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    evec.push_back(event((*i).get<string>(0), (*i).get<string>(1),
+                         (*i).get<string>(2),
+                         ((*i).get<string>(3) == "TRUE") ? true : false));
+
+    std::cout << pos++ << ". " << (*i).get<string>(0) << '\t'
+              << (*i).get<string>(1) << '\t' << (*i).get<string>(2) << '\t'
+              << (*i).get<string>(3) << '\n';
+  }
+  std::cout << "Item to edit [0 to go back]: ";
+  std::cin >> choice;
+  if (choice == 0)
+    return;
+  event e = evec[--choice];
+
+  std::cout << "\nFields\n"
+               "0. Done\n"
+               "1. Date\n"
+               "2. Class\n"
+               "3. Description\n"
+               "4. Important\n"
+               "Enter field you wish to change: ";
+  std::cin >> choice;
+
+  std::string column, old;
+  switch (choice) {
+  case 0:
+    return;
+    break;
+  case 1:
+    column = "date";
+    old = e.date;
+    break;
+  case 2:
+    column = "class";
+    old = e.class_id;
+    break;
+  case 3:
+    column = "desc";
+    old = e.description;
+    break;
+  case 4:
+    column = "important";
+    if (e.important)
+      old = "TRUE";
+    else
+      old = "FALSE";
+    break;
+  }
+
+  std::cout << "New value: ";
+  std::cin.ignore(1);
+  string updated;
+  std::getline(std::cin, updated, '\n');
+
+  request = "UPDATE events "
+            "SET " +
+            column + " = REPLACE(" + column + ", '" + old + "', '" + updated +
+            "') "
+            "WHERE "
+            "date = '" +
+            e.date +
+            "' AND "
+            "class = '" +
+            e.class_id +
+            "' AND "
+            "desc = '" +
+            e.description +
+            "' AND "
+            "important = '" +
+            (e.important ? "TRUE" : "FALSE") + "'";
+
+  sqlite3pp::command cmd(db, request.c_str());
+
+  cmd.execute();
+}
 std::string DatabaseHandler::date_to_string(struct tm *date) {
 
   std::stringstream ss;

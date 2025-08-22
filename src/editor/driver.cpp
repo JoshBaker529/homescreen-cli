@@ -27,6 +27,7 @@ int main() {
   std::ifstream InFile;
 
   while (true) {
+    system("clear");
     cout << "Welcome to the editor! What would you like to do?\n"
             " 1. Read from file\n"
             " 2. Manual add\n"
@@ -169,6 +170,15 @@ int main() {
       } // switch table
       break;
     case EDIT:
+      switch (table) {
+      case TABLE_EVENTS:
+        db.edit_event();
+        break;
+      case TABLE_COLORS:
+        break;
+      case TABLE_SCHEDULE:
+        break;
+      }
       break;
     case DELETE:
       break;
@@ -199,6 +209,9 @@ int main() {
       }
       break;
     } // switch action
+      //
+
+    std::this_thread::sleep_for(std::chrono::seconds(15));
   }
 
   // NOTE: Maybe save '?' as an input to list all possible options?
