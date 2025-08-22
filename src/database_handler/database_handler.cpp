@@ -276,6 +276,105 @@ void DatabaseHandler::edit_color() {
   set_color(class_id, fore, back);
 }
 
+void DatabaseHandler::edit_sched() {
+  std::cout << "Starting search for event"
+
+               "\n 0. Sunday"
+               "\n 1. Monday"
+               "\n 2. Tuesday"
+               "\n 3. Wednesday"
+               "\n 4. Thursday"
+               "\n 5. Friday"
+               "\n 6. Saturday"
+               "\nEnter day of item you wish to modify: ";
+  int day;
+  std::cin >> day;
+  string request;
+  request = "SELECT * FROM sched WHERE day = '" + std::to_string(day) + "'";
+
+  sqlite3pp::query qry(db, request.c_str());
+
+  std::cout << "Found:\n";
+  int pos = 1, choice;
+  std::vector<sched> scheds;
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    scheds.push_back(sched((*i).get<int>(0), (*i).get<string>(1),
+                           (*i).get<string>(2), (*i).get<string>(3),
+                           (*i).get<string>(4)));
+    std::cout << pos++ << ". " << (*i).get<int>(0) << '\t'
+              << (*i).get<string>(1) << '\t' << (*i).get<string>(2) << '\t'
+              << (*i).get<string>(3) << '\t' << (*i).get<string>(4) << '\n';
+  }
+  std::cout << "Item to edit [0 to go back]: ";
+  std::cin >> choice;
+  if (choice == 0)
+    return;
+  sched s = scheds[--choice];
+
+  std::cout << "\nFields\n"
+               "0. Done\n"
+               "1. Day\n"
+               "2. Class\n"
+               "3. Location\n"
+               "4. Start time\n"
+               "5. End time\n"
+               "Enter field you wish to change: ";
+  std::cin >> choice;
+
+  std::string column, old;
+  switch (choice) {
+  case 0:
+    return;
+    break;
+  case 1:
+    column = "day";
+    old = s.day;
+    break;
+  case 2:
+    column = "class";
+    old = s.class_id;
+    break;
+  case 3:
+    column = "location";
+    old = s.location;
+    break;
+  case 4:
+    column = "start";
+    old = s.start;
+    break;
+  case 5:
+    column = "end";
+    old = s.end;
+    break;
+  }
+
+  std::cout << "New value: ";
+  std::cin.ignore(1);
+  string updated;
+  std::getline(std::cin, updated, '\n');
+
+  request = "UPDATE sched "
+            "SET " +
+            column + " = REPLACE(" + column + ", '" + old + "', '" + updated +
+            "') "
+            "WHERE "
+            "day = '" +
+            std::to_string(s.day) +
+            "' AND "
+            "class = '" +
+            s.class_id +
+            "' AND "
+            "location = '" +
+            s.location +
+            "' AND "
+            "start = '" +
+            s.start + "' AND end = '" + s.end + "'";
+
+  sqlite3pp::command cmd(db, request.c_str());
+
+  cmd.execute();
+}
+
 std::string DatabaseHandler::date_to_string(struct tm *date) {
 
   std::stringstream ss;

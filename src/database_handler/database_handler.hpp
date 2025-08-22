@@ -29,6 +29,10 @@ public:
                       string end);
   void edit_event();
   void edit_color();
+  void edit_sched();
+  void delete_event();
+  void delete_color();
+  void delete_sched();
 
 private:
   sqlite3pp::database db;

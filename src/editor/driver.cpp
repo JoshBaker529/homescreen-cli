@@ -180,6 +180,7 @@ int main() {
         db.edit_color();
         break;
       case TABLE_SCHEDULE:
+        db.edit_sched();
         break;
       }
       break;
@@ -214,6 +215,7 @@ int main() {
     } // switch action
       //
 
+    std::cout << "\n\nDone, resetting..." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(15));
   }
 
