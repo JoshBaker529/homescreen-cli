@@ -375,6 +375,116 @@ void DatabaseHandler::edit_sched() {
   cmd.execute();
 }
 
+void DatabaseHandler::delete_event() {
+  std::cout
+      << "Starting search for event\nEnter date of item you wish to delete: ";
+  string date, request;
+  std::getline(std::cin, date, '\n');
+  request = "SELECT * FROM events WHERE date = '" + date + "'";
+
+  sqlite3pp::query qry(db, request.c_str());
+
+  std::cout << "Found:\n";
+  int pos = 1, choice;
+  std::vector<event> evec;
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    evec.push_back(event((*i).get<string>(0), (*i).get<string>(1),
+                         (*i).get<string>(2),
+                         ((*i).get<string>(3) == "TRUE") ? true : false));
+
+    std::cout << pos++ << ". " << (*i).get<string>(0) << '\t'
+              << (*i).get<string>(1) << '\t' << (*i).get<string>(2) << '\t'
+              << (*i).get<string>(3) << '\n';
+  }
+  std::cout << "Item to delete [0 to go back]: ";
+  std::cin >> choice;
+  if (choice == 0)
+    return;
+  event e = evec[--choice];
+
+  request = "DELETE FROM events "
+            "WHERE "
+            "date = '" +
+            e.date +
+            "' AND "
+            "class = '" +
+            e.class_id +
+            "' AND "
+            "desc = '" +
+            e.description +
+            "' AND "
+            "important = '" +
+            (e.important ? "TRUE" : "FALSE") + "'";
+
+  sqlite3pp::command cmd(db, request.c_str());
+
+  cmd.execute();
+}
+
+void DatabaseHandler::delete_color() {
+  std::cout << "Enter which class you wish to delete: ";
+  string choice, request;
+  std::getline(std::cin, choice, '\n');
+
+  request = "DELETE FROM colors WHERE tag = '" + choice + "'";
+  sqlite3pp::command cmd(db, request.c_str());
+  cmd.execute();
+}
+
+void DatabaseHandler::delete_sched() {
+  std::cout << "Starting search for event"
+
+               "\n 0. Sunday"
+               "\n 1. Monday"
+               "\n 2. Tuesday"
+               "\n 3. Wednesday"
+               "\n 4. Thursday"
+               "\n 5. Friday"
+               "\n 6. Saturday"
+               "\nEnter day of item you wish to delete: ";
+  int day;
+  std::cin >> day;
+  string request;
+  request = "SELECT * FROM sched WHERE day = '" + std::to_string(day) + "'";
+
+  sqlite3pp::query qry(db, request.c_str());
+
+  std::cout << "Found:\n";
+  int pos = 1, choice;
+  std::vector<sched> scheds;
+  for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
+    scheds.push_back(sched((*i).get<int>(0), (*i).get<string>(1),
+                           (*i).get<string>(2), (*i).get<string>(3),
+                           (*i).get<string>(4)));
+    std::cout << pos++ << ". " << (*i).get<int>(0) << '\t'
+              << (*i).get<string>(1) << '\t' << (*i).get<string>(2) << '\t'
+              << (*i).get<string>(3) << '\t' << (*i).get<string>(4) << '\n';
+  }
+  std::cout << "Item to delete [0 to go back]: ";
+  std::cin >> choice;
+  if (choice == 0)
+    return;
+  sched s = scheds[--choice];
+
+  request = "DELETE FROM sched "
+            "WHERE "
+            "day = '" +
+            std::to_string(s.day) +
+            "' AND "
+            "class = '" +
+            s.class_id +
+            "' AND "
+            "location = '" +
+            s.location +
+            "' AND "
+            "start = '" +
+            s.start + "' AND end = '" + s.end + "'";
+
+  sqlite3pp::command cmd(db, request.c_str());
+
+  cmd.execute();
+}
+
 std::string DatabaseHandler::date_to_string(struct tm *date) {
 
   std::stringstream ss;
