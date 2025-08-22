@@ -12,6 +12,7 @@ using std::cout;
 #define EDIT 3
 #define DELETE 4
 #define HELP 5
+#define DEBUG 6
 
 #define TABLE_EVENTS 1
 #define TABLE_COLORS 2
@@ -69,7 +70,6 @@ int main() {
 
       case TABLE_COLORS:
         while (!InFile.eof()) {
-          // InFile >> class_id >> fore >> back;
           std::getline(InFile, class_id, '\t');
           std::getline(InFile, fore, '\t');
           std::getline(InFile, back, '\n');
@@ -92,12 +92,13 @@ int main() {
         break;
 
       } // switch table
+      std::cout << "\nFile reading complete.\n\n";
       InFile.close();
       break;
     case MANUAL_ADD:
       switch (table) {
       case TABLE_EVENTS:
-        cout << "\nEnter the date: ";
+        cout << "\nEnter the date in YYYY-MM-DD format: ";
         std::getline(cin, date, '\n');
         cout << "\nEnter class: ";
         std::getline(cin, class_id, '\n');
@@ -174,6 +175,19 @@ int main() {
     case HELP:
       switch (table) {
       case TABLE_EVENTS:
+        std::cout << "The events table is used for...";
+        break;
+      case TABLE_COLORS:
+        std::cout << "The colors table is used for...";
+        break;
+      case TABLE_SCHEDULE:
+        std::cout << "The schedule table is used for...";
+        break;
+      }
+      break;
+    case DEBUG:
+      switch (table) {
+      case TABLE_EVENTS:
         db.debug_print_db("events");
         break;
       case TABLE_COLORS:
@@ -181,6 +195,7 @@ int main() {
         break;
       case TABLE_SCHEDULE:
         db.debug_print_db("sched");
+        break;
       }
       break;
     } // switch action
