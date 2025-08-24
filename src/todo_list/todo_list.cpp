@@ -45,10 +45,11 @@ void TodoList::print_list() {
   events = db.get_events_between(&start, &end);
 
   for (int rows = 1; !dates_equal(&start, &end) && rows < w.ws_row;
-       start = add_days_to_date(&start, 1), rows++) {
+       start = add_days_to_date(&start, 1)) {
     string db_date = get_database_date(&start);
     if (events.count(db_date) > 0) {
       std::cout << set_bold << " " << db_date << color_reset << "\n";
+      rows++;
       for (auto i = events[db_date].begin(); i != events[db_date].end(); i++) {
         string print = i->class_id;
         print.append(": ");
@@ -57,6 +58,7 @@ void TodoList::print_list() {
           print.append(" ");
         }
         std::cout << "  " << db.get_color(i->class_id);
+        rows++;
         for (int i = 0; i < w.ws_col - 3; i++) {
           std::cout << print[i];
         }
