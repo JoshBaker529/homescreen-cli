@@ -14,6 +14,7 @@ public:
 private:
   DatabaseHandler database;
   struct tm *date;
+  bool show_class = false; // toggles showing the class name in Calendar
 
   EVENT_MAP events;
 };

@@ -100,11 +100,15 @@ void Calendar::print_month() {
         if (events.count(db_date) > 0) {
           // std::cout << "Somehting";
           if (events[db_date].size() > j) {
-            print = events[db_date][j].class_id;
-            std::cout << database.get_color(print);
-            print.append(" ");
-            print.append(events[db_date][j].description);
+            if (show_class) {
+              print = events[db_date][j].class_id;
+              print.append(" ");
+              print.append(events[db_date][j].description);
+            } else {
+              print = events[db_date][j].description;
+            }
 
+            std::cout << database.get_color(events[db_date][j].class_id);
             while (print.length() < day_width) {
               print.append(" ");
             }
